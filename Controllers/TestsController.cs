@@ -1,13 +1,4 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
-using System;
-using System.Collections;
-using System.Drawing;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Metadata.Ecma335;
-using System.Text.RegularExpressions;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace TestHiberusNet.Controllers
 {
@@ -74,7 +65,7 @@ namespace TestHiberusNet.Controllers
                 }
                 else if (numbers[i] < finalValue)
                 {
-                    bool isChecking = false;
+                    bool isChecked = false;
                     combination.Add(numbers[i]);
                     indexUsed.Add(i);
                     do
@@ -103,12 +94,12 @@ namespace TestHiberusNet.Controllers
                         }
                         else
                         {
-                            isChecking = true;
+                            isChecked = true;
                             indexUsed.Clear();
                             combination.Clear();
                         }
 
-                    } while (!isChecking);
+                    } while (!isChecked);
                 }
             }
             return combinations;
