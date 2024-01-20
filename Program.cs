@@ -1,12 +1,22 @@
+using EFCoreSecondLevelCacheInterceptor;
 using TestHiberusNet.AppServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddEFSecondLevelCache(options =>
+{
+    options.UseMemoryCacheProvider()
+    .DisableLogging(true)
+    .UseCacheKeyPrefix("EF_")
+    .UseDbCallsIfCachingProviderIsDown(TimeSpan.FromMinutes(1));
+});
+
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddServices();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

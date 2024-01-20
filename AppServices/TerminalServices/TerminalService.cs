@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using TestHiberusNet.DTOs.TerminalDTOs;
 using TestHiberusNet.Models;
@@ -22,8 +23,9 @@ namespace TestHiberusNet.AppServices.TerminalServices
         {
            List<Terminales> TerminalList = await _dbContext.Terminales
                 .Include(t => t.IdEstadoNavigation)
-                .Include(t => t.IdFabNavigation)
+                .Include(t => t.IdFabNavigation)                
                 .AsNoTracking()
+                .Cacheable()
                 .ToListAsync();
 
            return _mapper.Map<List<TerminalDto>>(TerminalList);

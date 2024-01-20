@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 using TestHiberusNet.AppServices.TerminalServices;
 using TestHiberusNet.Mappers;
@@ -10,12 +11,19 @@ public static class ServiceExtension
 {
     public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        IConfiguration configuration2 = configuration;
-        services.AddDbContext<HiberusTestDBContext>(options =>
-        {
-            string connectionString = configuration2.GetConnectionString("Default");
-            options.UseSqlServer(connectionString);
-        });
+        string connectionString = configuration.GetConnectionString("Default");
+        services.AddDbContext<HiberusTestDBContext>((serviceProvider, optionsBuilder) =>
+                    optionsBuilder
+                        .UseSqlServer(
+                            connectionString,
+                            sqlServerOptionsBuilder =>
+                            {
+                                sqlServerOptionsBuilder
+                                    .CommandTimeout((int)TimeSpan.FromMinutes(3).TotalSeconds)
+                                    .EnableRetryOnFailure()
+                                    .MigrationsAssembly(typeof(ServiceExtension).Assembly.FullName);
+                            })
+                        .AddInterceptors(serviceProvider.GetRequiredService<SecondLevelCacheInterceptor>()));
         return services;
     }
 
