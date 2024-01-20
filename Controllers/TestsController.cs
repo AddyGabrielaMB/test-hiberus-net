@@ -21,8 +21,9 @@ namespace TestHiberusNet.Controllers
         public List<KeyValuePair<string, int>> GetRepeated(string text)
         {
             var charList = new List<KeyValuePair<string, int>>();
-            char[] charArray = text.ToCharArray();
+            if (String.IsNullOrEmpty(text)) return charList;
 
+            char[] charArray = text.ToCharArray();
             foreach (char c in charArray)
             {
                 int charIndex = charList.FindIndex(e => e.Key.Equals(c.ToString()));
